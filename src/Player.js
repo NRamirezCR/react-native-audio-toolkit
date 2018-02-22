@@ -215,6 +215,53 @@ class Player extends EventEmitter {
     });
   }
 
+  setNowPlaying(title, artwork, artist, album, genre, duration) {
+    MusicControl.setNowPlaying({
+      title: title,
+      artwork: artwork, // URL or RN's image require()
+      artist: artiest,
+      album: album,
+      genre: genre,
+      duration: duration, // (Seconds)
+    });
+
+    // Basic Controls
+    MusicControl.enableControl('play', true);
+    MusicControl.enableControl('pause', true);
+    MusicControl.enableControl('stop', false);
+    MusicControl.enableControl('nextTrack', false);
+    MusicControl.enableControl('previousTrack', false);
+
+    // Seeking
+    MusicControl.enableControl('skipForward', true, {interval: 30});
+    MusicControl.enableControl('skipBackward', true, {interval: 30});
+
+    MusicControl.on('play', ()=> {
+      this.playPause();
+    });
+
+    // on iOS this event will also be triggered by audio router change events
+    // happening when headphones are unplugged or a bluetooth audio peripheral disconnects from the device
+    MusicControl.on('pause', ()=> {
+      this.playPause();
+    });
+
+
+    MusicControl.on('skipForward', ()=> {
+      this.updateCurrentTime();
+
+      this.seek(Math.min(this._position + 30, this._duration));
+    });
+
+    MusicControl.on('skipBackward', ()=> {
+      this.updateCurrentTime();
+
+      this.seek(Math.max(0, this._position - 30));
+    });
+  }
+
+  
+
   _setIfInitialized(options, callback = _.noop) {
     if (this._state >= MediaStates.PREPARED) {
       RCTAudioPlayer.set(this._playerId, options, callback);
