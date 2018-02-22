@@ -248,6 +248,14 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         player.setOnInfoListener(this);
         player.setOnCompletionListener(this);
         player.setOnSeekCompleteListener(this);
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() { // Async preparing, so we need to run the callback after preparing has finished
+
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                callback.invoke(null, getInfo(player));
+            }
+
+        });
 
         this.playerPool.put(playerId, player);
 
@@ -269,8 +277,8 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         this.playerContinueInBackground.put(playerId, continueInBackground);
 
         try {
-            player.prepare();
-            callback.invoke(null, getInfo(player));
+            player.setDataSource(uri);
+            player.prepareAsync();
         } catch (Exception e) {
             callback.invoke(errObj("prepare", e.toString()));
         }
