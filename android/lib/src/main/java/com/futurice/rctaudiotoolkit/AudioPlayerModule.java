@@ -270,7 +270,7 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
 
         try {
             player.prepare();
-            callback.Invoke(null, getInfo(player));
+            callback.invoke(null, getInfo(player));
         } catch (Exception e) {
             callback.invoke(errObj("prepare", e.toString()));
         }
