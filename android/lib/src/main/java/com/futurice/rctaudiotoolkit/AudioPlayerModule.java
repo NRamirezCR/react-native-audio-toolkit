@@ -231,23 +231,10 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
             return;
         }
 
-        // Release old player if exists
-        destroy(playerId);
-        this.lastPlayerId = playerId;
-
         Uri uri = uriFromPath(path);
 
         //MediaPlayer player = MediaPlayer.create(this.context, uri, null, attributes);
         MediaPlayer player = new MediaPlayer();
-
-        /*
-        AudioAttributes attributes = new AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_UNKNOWN)
-            .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
-            .build();
-
-        player.setAudioAttributes(attributes);
-        */
 
         try {
             Log.d(LOG_TAG, uri.getPath());
