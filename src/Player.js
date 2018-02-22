@@ -4,6 +4,7 @@ import _ from 'lodash';
 import async from 'async';
 import EventEmitter from 'eventemitter3';
 import MediaStates from './MediaStates';
+import MusicControl from 'react-native-music-control';
 
 const RCTAudioPlayer = NativeModules.AudioPlayer;
 

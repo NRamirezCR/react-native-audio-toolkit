@@ -12,7 +12,25 @@
 		5E21FB671D40CF5300A922AE /* ReactPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E21FB661D40CF5300A922AE /* ReactPlayerItem.m */; };
 		5E8FD9931D269F9900CF68CC /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E8FD9901D269F9900CF68CC /* AudioPlayer.m */; };
 		5E8FD9941D269F9900CF68CC /* AudioRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E8FD9921D269F9900CF68CC /* AudioRecorder.m */; };
+		7DD8E16A203E5FCC004EA046 /* libMusicControl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DD8E166203E5FC1004EA046 /* libMusicControl.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7DD8E165203E5FC1004EA046 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DD8E160203E5FC1004EA046 /* MusicControl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = MusicControl;
+		};
+		7DD8E167203E5FC1004EA046 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7DD8E160203E5FC1004EA046 /* MusicControl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A3FC285E1EA7A8350097B6A9;
+			remoteInfo = "MusicControl-tvOS";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5E8FD9811D269F5D00CF68CC /* CopyFiles */ = {
@@ -38,6 +56,7 @@
 		5E8FD9901D269F9900CF68CC /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
 		5E8FD9911D269F9900CF68CC /* AudioRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorder.h; sourceTree = "<group>"; };
 		5E8FD9921D269F9900CF68CC /* AudioRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorder.m; sourceTree = "<group>"; };
+		7DD8E160203E5FC1004EA046 /* MusicControl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MusicControl.xcodeproj; path = "../../node_modules/react-native-music-control/ios/MusicControl.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7DD8E16A203E5FCC004EA046 /* libMusicControl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,8 +74,10 @@
 		5E8FD97A1D269F5D00CF68CC = {
 			isa = PBXGroup;
 			children = (
+				7DD8E160203E5FC1004EA046 /* MusicControl.xcodeproj */,
 				5E8FD9851D269F5D00CF68CC /* ReactNativeAudioToolkit */,
 				5E8FD9841D269F5D00CF68CC /* Products */,
+				7DD8E169203E5FCC004EA046 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,6 +104,22 @@
 				5E21FB661D40CF5300A922AE /* ReactPlayerItem.m */,
 			);
 			path = ReactNativeAudioToolkit;
+			sourceTree = "<group>";
+		};
+		7DD8E161203E5FC1004EA046 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7DD8E166203E5FC1004EA046 /* libMusicControl.a */,
+				7DD8E168203E5FC1004EA046 /* libMusicControl-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7DD8E169203E5FCC004EA046 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,12 +166,35 @@
 			mainGroup = 5E8FD97A1D269F5D00CF68CC;
 			productRefGroup = 5E8FD9841D269F5D00CF68CC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7DD8E161203E5FC1004EA046 /* Products */;
+					ProjectRef = 7DD8E160203E5FC1004EA046 /* MusicControl.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				5E8FD9821D269F5D00CF68CC /* ReactNativeAudioToolkit */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7DD8E166203E5FC1004EA046 /* libMusicControl.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMusicControl.a;
+			remoteRef = 7DD8E165203E5FC1004EA046 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7DD8E168203E5FC1004EA046 /* libMusicControl-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libMusicControl-tvOS.a";
+			remoteRef = 7DD8E167203E5FC1004EA046 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5E8FD97F1D269F5D00CF68CC /* Sources */ = {
