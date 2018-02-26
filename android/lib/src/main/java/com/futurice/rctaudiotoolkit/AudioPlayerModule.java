@@ -277,7 +277,7 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         this.playerContinueInBackground.put(playerId, continueInBackground);
 
         try {
-            player.setDataSource(uri);
+            player.setDataSource(path);
             player.prepareAsync();
         } catch (Exception e) {
             callback.invoke(errObj("prepare", e.toString()));
