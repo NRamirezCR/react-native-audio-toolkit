@@ -238,7 +238,7 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
 
         try {
             Log.d(LOG_TAG, uri.getPath());
-            player.setDataSource(this.context, uri);
+            player.setDataSource(this.context, uri.parse());
         } catch (IOException e) {
             callback.invoke(errObj("invalidpath", e.toString()));
             return;
@@ -277,7 +277,6 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         this.playerContinueInBackground.put(playerId, continueInBackground);
 
         try {
-            player.setDataSource(path);
             player.prepareAsync();
         } catch (Exception e) {
             callback.invoke(errObj("prepare", e.toString()));
