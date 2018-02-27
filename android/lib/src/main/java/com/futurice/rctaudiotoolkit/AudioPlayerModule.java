@@ -32,15 +32,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class AudioPlayerModule extends ReactContextBaseJavaModule implements MediaPlayer.OnInfoListener,
-        MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnBufferingUpdateListener, LifecycleEventListener, AudioManager.OnAudioFocusChangeListener {
+public class AudioPlayerModule extends ReactContextBaseJavaModule
+        implements MediaPlayer.OnInfoListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener,
+        LifecycleEventListener, AudioManager.OnAudioFocusChangeListener {
     private static final String LOG_TAG = "AudioPlayerModule";
 
     Map<Integer, MediaPlayer> playerPool = new HashMap<>();
     Map<Integer, Boolean> playerAutoDestroy = new HashMap<>();
     Map<Integer, Boolean> playerContinueInBackground = new HashMap<>();
     Map<Integer, Callback> playerSeekCallback = new HashMap<>();
+    Map<Integer, Callback> playerPrepareCallback = new HashMap<>();
 
     boolean looping = false;
     private ReactApplicationContext context;
@@ -231,14 +233,26 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
             return;
         }
 
+        // Release old player if exists
+        destroy(playerId);
+        this.lastPlayerId = playerId;
+
         Uri uri = uriFromPath(path);
 
         //MediaPlayer player = MediaPlayer.create(this.context, uri, null, attributes);
         MediaPlayer player = new MediaPlayer();
 
+        /*
+        AudioAttributes attributes = new AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_UNKNOWN)
+            .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+            .build();
+        player.setAudioAttributes(attributes);
+        */
+
         try {
             Log.d(LOG_TAG, uri.getPath());
-            player.setDataSource(this.context, uri.parse());
+            player.setDataSource(this.context, uri);
         } catch (IOException e) {
             callback.invoke(errObj("invalidpath", e.toString()));
             return;
@@ -248,14 +262,7 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         player.setOnInfoListener(this);
         player.setOnCompletionListener(this);
         player.setOnSeekCompleteListener(this);
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() { // Async preparing, so we need to run the callback after preparing has finished
-
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                callback.invoke(null, getInfo(player));
-            }
-
-        });
+        player.setOnPreparedListener(this);
 
         this.playerPool.put(playerId, player);
 
@@ -275,6 +282,7 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
 
         this.playerAutoDestroy.put(playerId, autoDestroy);
         this.playerContinueInBackground.put(playerId, continueInBackground);
+        this.playerPrepareCallback.put(playerId, callback);
 
         try {
             player.prepareAsync();
@@ -448,6 +456,18 @@ public class AudioPlayerModule extends ReactContextBaseJavaModule implements Med
         return null;
     }
 
+    
+    @Override
+    public void onPrepared(MediaPlayer player) {
+        Integer playerId = getPlayerId(player);
+
+        Callback callback = this.playerPrepareCallback.get(playerId);
+
+        if (callback != null) {
+            callback.invoke(null, getInfo(player));
+            this.playerPrepareCallback.remove(playerId);
+        }
+    }
 
     @Override
     public void onBufferingUpdate(MediaPlayer player, int percent) {
