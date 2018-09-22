@@ -28,6 +28,8 @@ class Player extends EventEmitter {
     this._playerId = playerId++;
     this._reset();
 
+    this._stateChangeCbs = [];
+
     const appEventEmitter = Platform.OS === 'ios' ? NativeAppEventEmitter : DeviceEventEmitter;
 
     appEventEmitter.addListener(`RCTAudioPlayerEvent:${this._playerId}`, (payload: Event) => {
@@ -44,6 +46,7 @@ class Player extends EventEmitter {
     this._position = -1;
     this._lastSync = -1;
     this._looping = false;
+    this._stateChangeCbs = [];
   }
 
   _storeInfo(info) {
@@ -57,6 +60,8 @@ class Player extends EventEmitter {
   }
 
   _updateState(err, state, results) {
+    this._stateChangeCbs.forEach(cb => cb(err, state, results));
+
     this._state = err ? MediaStates.ERROR : state;
 
     if (err || !results) {
@@ -194,7 +199,11 @@ class Player extends EventEmitter {
 
   destroy(callback = _.noop) {
     this._reset();
-    RCTAudioPlayer.destroy(this._playerId, callback);
+    RCTAudioPlayer.destroy(this._playerId, (err, results) => {
+      this._updateState(err, MediaStates.DESTROYED);
+      this._position = -1;
+      callback(err);
+    });
   }
 
   seek(position = 0, callback = _.noop) {
@@ -213,6 +222,16 @@ class Player extends EventEmitter {
       this._updateState(err, this._preSeekState, [results]);
       callback(err);
     });
+  }
+
+  onStateChange(cb) {
+    if (!this._stateChangeCbs.includes(cb)) {
+      this._stateChangeCbs.push(cb);
+    }
+    return () => {
+      const index = this._stateChangeCbs.indexOf(cb);
+      if (index > -1) this._stateChangeCbs.splice(index, 1);
+    }
   }
 
   _setIfInitialized(options, callback = _.noop) {
